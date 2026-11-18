@@ -1,5 +1,7 @@
 # 手机商城 UI 自动化测试
 
+![phone-mall-ui-tests](https://github.com/zhongjiawei-dev/phone-mall-selenium/actions/workflows/ui-tests.yml/badge.svg)
+
 这是我在准备软件测试岗面试时做的一个练习项目。前端不是我重点，页面只是给 Selenium 提供真实的点击、输入和跳转；重点在页面对象封装、用例组织、数据驱动和失败排查。
 
 被测站点是一个能跑通的手机商城：登录、搜索、商品详情、购物车、结算、订单、支付都有。测试代码在 `tests/`，页面对象在 `pages/`，站点在 `shop/`。
