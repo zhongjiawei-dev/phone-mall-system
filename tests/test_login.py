@@ -40,9 +40,10 @@ def test_login_blocked_account(login_page):
 
 def test_logout(logged_in, shop):
     from pages.home_page import HomePage
-    HomePage(logged_in, shop).open("/logout")
-    HomePage(logged_in, shop).wait_url_contains("/")
-    assert HomePage(logged_in, shop).exists(HomePage.LOGIN_LINK)
+    page = HomePage(logged_in, shop)
+    page.open("/logout")
+    page.wait.until(lambda d: d.find_elements(*HomePage.LOGIN_LINK))
+    assert page.exists(HomePage.LOGIN_LINK)
 
 
 @pytest.mark.xfail(reason="SHOP-02：登录邮箱区分大小写，大小写混写登不进去")
