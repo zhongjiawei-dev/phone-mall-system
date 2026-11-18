@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+reports/allure-results/
+reports/screenshots/
+.venv/
+.env

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}购物车 · 手机商城{% endblock %}
+{% block content %}
+<h1>购物车</h1>
+{% if items %}
+<table class="cart-table">
+  <thead><tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th><th>操作</th></tr></thead>
+  <tbody>
+  {% for item in items %}
+  <tr class="cart-row" data-pid="{{ item.product.id }}">
+    <td class="cart-name">{{ item.product.name }}</td>
+    <td class="cart-price">¥{{ item.product.price }}</td>
+    <td>
+      <form class="qty-form" action="{{ url_for('cart_update', pid=item.product.id) }}" method="post">
+        <input class="qty-input" id="qty-{{ item.product.id }}" name="qty" type="number" value="{{ item.qty }}" min="0">
+        <button class="update-btn" type="submit">改</button>
+      </form>
+    </td>
+    <td class="line-total">¥{{ item.line_total }}</td>
+    <td>
+      <form action="{{ url_for('cart_remove', pid=item.product.id) }}" method="post">
+        <button class="remove-btn" type="submit">删除</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="total">合计：<span id="cart-total">¥{{ subtotal }}</span></p>
+<a id="checkout-btn" class="button" href="{{ url_for('checkout') }}">去结算</a>
+{% else %}
+<p class="empty" id="empty-cart">购物车还是空的。</p>
+<a href="{{ url_for('index') }}">去逛逛</a>
+{% endif %}
+{% endblock %}

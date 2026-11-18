@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}确认订单 · 手机商城{% endblock %}
+{% block content %}
+<h1>确认订单</h1>
+<div class="two-col">
+  <div>
+    <h2>收货信息</h2>
+    <form class="panel" action="{{ url_for('checkout') }}" method="post">
+      <label for="receiver">收货人</label>
+      <input id="receiver" name="receiver" type="text" value="{{ user.name }}">
+      <label for="phone">手机号</label>
+      <input id="phone" name="phone" type="text" placeholder="13800000001">
+      <label for="address">详细地址</label>
+      <input id="address" name="address" type="text" placeholder="比如：3 栋 201">
+      <button id="submit-order" type="submit">提交订单</button>
+    </form>
+  </div>
+  <div>
+    <h2>商品清单</h2>
+    <ul class="summary">
+      {% for item in items %}
+      <li>{{ item.product.name }} × {{ item.qty }} <span>¥{{ item.line_total }}</span></li>
+      {% endfor %}
+    </ul>
+    <p>商品金额 <span id="subtotal">¥{{ subtotal }}</span></p>
+    {% if discount != "0.00" %}<p class="discount" id="discount-row">会员优惠 -¥{{ discount }}</p>{% endif %}
+    <p class="total">应付 <span id="payable-total">¥{{ total }}</span></p>
+  </div>
+</div>
+{% endblock %}

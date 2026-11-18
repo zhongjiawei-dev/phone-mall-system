@@ -1,0 +1,27 @@
+body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; margin: 0; color: #222; background: #f6f7f9; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 32px; background: #1f2937; color: #fff; }
+.topbar a { color: #fff; text-decoration: none; margin-left: 18px; }
+.brand { font-weight: 600; font-size: 18px; margin-left: 0 !important; }
+main { max-width: 1080px; margin: 24px auto; padding: 0 20px; }
+h1 { font-size: 24px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.product-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; }
+.thumb { height: 80px; background: #eef2f7; display: flex; align-items: center; justify-content: center; color: #64748b; border-radius: 6px; }
+.price { color: #b91c1c; font-weight: 600; }
+.search { margin: 16px 0; display: flex; gap: 8px; }
+.search input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
+button, .button { background: #2563eb; color: #fff; border: 0; padding: 9px 16px; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; }
+.panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px; max-width: 520px; }
+.panel label { display: block; margin: 10px 0 4px; }
+.panel input { width: 100%; box-sizing: border-box; padding: 9px; border: 1px solid #cbd5e1; border-radius: 6px; }
+.cart-table { width: 100%; background: #fff; border-collapse: collapse; }
+.cart-table th, .cart-table td { padding: 10px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+.qty-input { width: 64px; padding: 6px; }
+.total { font-size: 18px; font-weight: 600; }
+.flash { background: #fff7ed; border: 1px solid #fdba74; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; }
+.empty, .hint { color: #64748b; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.summary { list-style: none; padding: 0; }
+.summary li { padding: 8px 0; border-bottom: 1px dashed #e5e7eb; display: flex; justify-content: space-between; }
+.method { display: block; margin: 8px 0; }
+footer { text-align: center; color: #94a3b8; padding: 30px; }

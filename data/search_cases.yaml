@@ -1,0 +1,13 @@
+# 搜索框的测试数据，改关键词不用改代码
+- id: brand
+  keyword: "小米"
+  expect_names: ["小米 15"]
+- id: no_result
+  keyword: "诺基亚"
+  expect_empty: true
+- id: empty_keyword
+  keyword: ""
+  expect_count: 8
+- id: lowercase_brand
+  keyword: "iphone"
+  expect_names: ["iPhone 17 Pro"]
