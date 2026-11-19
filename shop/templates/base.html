@@ -7,7 +7,7 @@
 </head>
 <body>
 <header class="topbar">
-  <a class="brand" href="{{ url_for('index') }}">手机商城 · 练习站</a>
+  <a class="brand" href="{{ url_for('index') }}">青禾手机商城</a>
   <nav>
     <a id="nav-home" href="{{ url_for('index') }}">首页</a>
     <a id="nav-cart" href="{{ url_for('cart') }}">购物车（{{ cart_count() }}）</a>
@@ -29,6 +29,6 @@
   {% endwith %}
   {% block content %}{% endblock %}
 </main>
-<footer>校园练习项目，非真实交易</footer>
+<footer>课程项目演示，支付为模拟流程</footer>
 </body>
 </html>

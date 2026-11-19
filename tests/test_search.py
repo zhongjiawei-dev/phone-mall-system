@@ -3,11 +3,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from pages.home_page import HomePage
-from pages.product_page import ProductPage
+from tests.pages.home_page import HomePage
+from tests.pages.product_page import ProductPage
 
 SEARCH_CASES = yaml.safe_load(
-    (Path(__file__).resolve().parent.parent / "data" / "search_cases.yaml").read_text(encoding="utf-8")
+    (Path(__file__).resolve().parent / "data" / "search_cases.yaml").read_text(encoding="utf-8")
 )
 
 

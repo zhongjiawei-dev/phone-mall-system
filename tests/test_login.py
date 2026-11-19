@@ -39,7 +39,7 @@ def test_login_blocked_account(login_page):
 
 
 def test_logout(logged_in, shop):
-    from pages.home_page import HomePage
+    from tests.pages.home_page import HomePage
     page = HomePage(logged_in, shop)
     page.open("/logout")
     page.wait.until(lambda d: d.find_elements(*HomePage.LOGIN_LINK))

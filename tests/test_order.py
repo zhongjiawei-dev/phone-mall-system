@@ -1,10 +1,10 @@
 import pytest
 
-from pages.cart_page import CartPage
-from pages.checkout_page import CheckoutPage
-from pages.home_page import HomePage
-from pages.login_page import LoginPage
-from pages.order_page import OrderPage
+from tests.pages.cart_page import CartPage
+from tests.pages.checkout_page import CheckoutPage
+from tests.pages.home_page import HomePage
+from tests.pages.login_page import LoginPage
+from tests.pages.order_page import OrderPage
 
 
 def test_checkout_requires_login(driver, shop):

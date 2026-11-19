@@ -1,8 +1,8 @@
 import pytest
 
-from pages.cart_page import CartPage
-from pages.home_page import HomePage
-from pages.product_page import ProductPage
+from tests.pages.cart_page import CartPage
+from tests.pages.home_page import HomePage
+from tests.pages.product_page import ProductPage
 
 
 @pytest.mark.smoke

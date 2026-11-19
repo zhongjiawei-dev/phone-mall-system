@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""手机商城练习站，给 Selenium 页面测试用。
+"""青禾手机商城 · Flask Web 应用。
 
 启动：
     python shop/app.py --port 9500
@@ -105,7 +105,7 @@ def health():
     return {"status": "up", "products": len(PRODUCTS), "orders": len(ORDERS)}
 
 
-@app.route("/test/reset")
+@app.route("/dev/reset")
 def test_reset():
     reset_data()
     session.clear()

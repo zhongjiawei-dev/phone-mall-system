@@ -1,12 +1,12 @@
 import pytest
 
-from pages.cart_page import CartPage
-from pages.checkout_page import CheckoutPage
-from pages.home_page import HomePage
-from pages.login_page import LoginPage
-from pages.order_page import OrderPage
-from pages.pay_page import PayPage
-from pages.product_page import ProductPage
+from tests.pages.cart_page import CartPage
+from tests.pages.checkout_page import CheckoutPage
+from tests.pages.home_page import HomePage
+from tests.pages.login_page import LoginPage
+from tests.pages.order_page import OrderPage
+from tests.pages.pay_page import PayPage
+from tests.pages.product_page import ProductPage
 
 
 def test_pay_page_amount(pay_ready):

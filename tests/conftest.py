@@ -78,7 +78,7 @@ def driver():
 
 @pytest.fixture(autouse=True)
 def reset_shop(shop_server, driver, request):
-    requests.get(shop_server + "/test/reset", timeout=5)
+    requests.get(shop_server + "/dev/reset", timeout=5)
     try:
         driver.get(shop_server + "/logout")
     except Exception:
@@ -109,42 +109,42 @@ def pytest_runtest_makereport(item, call):
 
 @pytest.fixture
 def login_page(driver, shop):
-    from pages.login_page import LoginPage
+    from tests.pages.login_page import LoginPage
     return LoginPage(driver, shop).open_page()
 
 
 @pytest.fixture
 def logged_in(driver, shop):
-    from pages.login_page import LoginPage
+    from tests.pages.login_page import LoginPage
     LoginPage(driver, shop).open_page().login("student@example.com", "Shop@123").wait_url_contains("/")
     return driver
 
 
 @pytest.fixture
 def vip_logged_in(driver, shop):
-    from pages.login_page import LoginPage
+    from tests.pages.login_page import LoginPage
     LoginPage(driver, shop).open_page().login("vip@example.com", "Vip@123").wait_url_contains("/")
     return driver
 
 
 @pytest.fixture
 def cart_with_iphone(logged_in, shop):
-    from pages.home_page import HomePage
+    from tests.pages.home_page import HomePage
     HomePage(logged_in, shop).open_page().add_to_cart("iPhone 17 Pro")
     return logged_in
 
 
 @pytest.fixture
 def checkout_ready(cart_with_iphone, shop):
-    from pages.cart_page import CartPage
+    from tests.pages.cart_page import CartPage
     CartPage(cart_with_iphone, shop).open_page().go_checkout()
     return cart_with_iphone
 
 
 @pytest.fixture
 def created_order(checkout_ready, shop):
-    from pages.checkout_page import CheckoutPage
-    from pages.order_page import OrderPage
+    from tests.pages.checkout_page import CheckoutPage
+    from tests.pages.order_page import OrderPage
     page = CheckoutPage(checkout_ready, shop)
     page.fill().submit()
     page.wait_url_contains("/order/")
@@ -154,6 +154,6 @@ def created_order(checkout_ready, shop):
 
 @pytest.fixture
 def pay_ready(created_order, shop):
-    from pages.pay_page import PayPage
+    from tests.pages.pay_page import PayPage
     created_order["page"].go_pay()
     return PayPage(created_order["driver"], shop)
