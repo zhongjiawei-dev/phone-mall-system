@@ -5,3 +5,7 @@ reports/allure-results/
 reports/screenshots/
 .venv/
 .env
+shop/data/
+*.db
+*.db-wal
+*.db-shm

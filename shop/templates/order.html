@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% block title %}订单详情 · 手机商城{% endblock %}
+{% block title %}订单详情 · 青禾手机商城{% endblock %}
 {% block content %}
 <h1>订单详情</h1>
-<div class="panel">
-  <p>订单号：<strong id="order-no">{{ order.order_no }}</strong></p>
-  <p>状态：<strong id="order-status">{{ "已支付" if order.status == "paid" else "待支付" }}</strong></p>
+<div class="panel order-panel">
+  <div class="order-head">
+    <p>订单号：<strong id="order-no">{{ order.order_no }}</strong></p>
+    <p>状态：<strong id="order-status" class="status-badge status-{{ order.status }}">{{ order.status_label }}</strong></p>
+  </div>
   <p>收货人：<span id="order-receiver">{{ order.receiver }}</span>，{{ order.phone }}</p>
   <p>地址：<span id="order-address">{{ order.address }}</span></p>
   <ul class="summary">
@@ -14,12 +16,54 @@
   </ul>
   <p>商品金额 ¥{{ order.subtotal }}</p>
   {% if order.discount != "0.00" %}<p class="discount">会员优惠 -¥{{ order.discount }}</p>{% endif %}
+  {% if order.coupon_discount != "0.00" %}<p class="discount">优惠券 -¥{{ order.coupon_discount }}{% if order.coupon_code %}（{{ order.coupon_code }}）{% endif %}</p>{% endif %}
   <p class="total">实付 <span id="order-total">¥{{ order.total }}</span></p>
   {% if order.status == "pending" %}
     <a id="pay-btn" class="button" href="{{ url_for('pay', order_no=order.order_no) }}">去支付</a>
-  {% else %}
+    <form class="inline-form" action="{{ url_for('order_cancel', order_no=order.order_no) }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button id="cancel-order" class="ghost-btn" type="submit">取消订单</button>
+    </form>
+  {% elif order.status == "paid" %}
     <p id="paid-at">支付时间：{{ order.paid_at }}</p>
+    <form class="inline-form" action="{{ url_for('order_refund', order_no=order.order_no) }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button id="refund-order" class="ghost-btn" type="submit">申请退款</button>
+    </form>
+  {% elif order.status == "shipped" %}
+    <p>发货时间：{{ order.shipped_at }}</p>
+    <form class="inline-form" action="{{ url_for('order_complete', order_no=order.order_no) }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button id="complete-order" type="submit">确认收货</button>
+    </form>
+    <form class="inline-form" action="{{ url_for('order_refund', order_no=order.order_no) }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button id="refund-order" class="ghost-btn" type="submit">申请退款</button>
+    </form>
+  {% elif order.status == "refunding" %}
+    <p class="hint">退款申请已提交，等待管理员审核。</p>
+  {% elif order.status == "refunded" %}
+    <p id="refunded-at">退款时间：{{ order.refunded_at }}</p>
+  {% elif order.status == "completed" %}
+    <p>完成时间：{{ order.completed_at }}</p>
+  {% elif order.status == "cancelled" %}
+    <p>取消时间：{{ order.cancelled_at }}</p>
   {% endif %}
 </div>
+
+<section class="timeline">
+  <h2>订单进度</h2>
+  <ol>
+    {% for log in order.logs %}
+    <li>
+      <span class="timeline-dot"></span>
+      <div>
+        <strong>{{ log.to_label }}</strong>
+        <p>{{ log.note }} · {{ log.created_at }}</p>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
 <p><a href="{{ url_for('index') }}">继续逛逛</a></p>
 {% endblock %}

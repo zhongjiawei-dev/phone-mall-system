@@ -46,7 +46,6 @@ def test_logout(logged_in, shop):
     assert page.exists(HomePage.LOGIN_LINK)
 
 
-@pytest.mark.xfail(reason="SHOP-02：登录邮箱区分大小写，大小写混写登不进去")
 def test_login_email_case_insensitive(login_page):
     login_page.login("Student@Example.com", "Shop@123")
     assert "小钟" in login_page.logged_in_as()

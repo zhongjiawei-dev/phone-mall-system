@@ -75,7 +75,6 @@ def test_add_from_product_page_with_qty(logged_in, shop):
     assert "8598.00" in cart.total()
 
 
-@pytest.mark.xfail(reason="SHOP-01：购物车不校验库存，库存 12 台却能加 13 台")
 def test_cart_rejects_quantity_above_stock(logged_in, shop):
     ProductPage(logged_in, shop).open_page(1).add(13)
     cart = CartPage(logged_in, shop)

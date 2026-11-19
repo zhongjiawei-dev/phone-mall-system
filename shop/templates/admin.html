@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}管理后台 · 青禾手机商城{% endblock %}
+{% block content %}
+<div class="admin-header">
+  <div>
+    <p class="eyebrow">ADMIN CONSOLE</p>
+    <h1>管理后台</h1>
+    <p class="hint">订单、库存、优惠券与账号的统一运营面板。</p>
+  </div>
+  <a class="button ghost-btn" href="{{ url_for('index') }}">返回商城</a>
+</div>
+
+<section class="stats-grid">
+  <div class="stat-card"><span>订单总数</span><strong>{{ stats.total_orders }}</strong></div>
+  <div class="stat-card"><span>成交金额</span><strong>¥{{ stats.revenue }}</strong></div>
+  <div class="stat-card"><span>活跃用户</span><strong>{{ stats.users }}</strong></div>
+  <div class="stat-card"><span>在售商品</span><strong>{{ stats.products }}</strong></div>
+  <div class="stat-card"><span>待支付</span><strong>{{ stats.pending }}</strong></div>
+  <div class="stat-card"><span>退款审核</span><strong>{{ stats.refunding }}</strong></div>
+</section>
+{% if stats.low_stock %}
+<p class="hint">有 {{ stats.low_stock }} 款商品库存不高于 3 台，建议及时补货。</p>
+{% endif %}
+
+<section class="admin-section">
+  <div class="section-head">
+    <h2>订单管理</h2>
+    <div class="filter-links">
+      <a href="{{ url_for('admin_dashboard') }}" class="{% if not current_status %}active{% endif %}">全部</a>
+      <a href="{{ url_for('admin_dashboard', status='pending') }}" class="{% if current_status == 'pending' %}active{% endif %}">待支付</a>
+      <a href="{{ url_for('admin_dashboard', status='paid') }}" class="{% if current_status == 'paid' %}active{% endif %}">已支付</a>
+      <a href="{{ url_for('admin_dashboard', status='shipped') }}" class="{% if current_status == 'shipped' %}active{% endif %}">已发货</a>
+      <a href="{{ url_for('admin_dashboard', status='refunding') }}" class="{% if current_status == 'refunding' %}active{% endif %}">退款审核</a>
+    </div>
+  </div>
+  {% if orders %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>订单号</th><th>用户</th><th>金额</th><th>状态</th><th>件数</th><th>下单时间</th><th>操作</th></tr></thead>
+      <tbody>
+      {% for order in orders %}
+      <tr>
+        <td><a href="{{ url_for('order_detail', order_no=order.order_no) }}">{{ order.order_no }}</a></td>
+        <td>{{ order.user_name }}<br><small>{{ order.email }}</small></td>
+        <td>¥{{ order.total }}</td>
+        <td><span class="status-badge status-{{ order.status }}">{{ order.status_label }}</span></td>
+        <td>{{ order.item_count }}</td>
+        <td>{{ order.created_at }}</td>
+        <td class="action-cell">
+          {% if order.status == 'pending' %}
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='cancel') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="ghost-btn" type="submit">取消</button>
+          </form>
+          {% elif order.status == 'paid' %}
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='ship') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit">发货</button>
+          </form>
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='refund') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="ghost-btn" type="submit">退款</button>
+          </form>
+          {% elif order.status == 'shipped' %}
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='complete') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit">完成</button>
+          </form>
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='refund') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="ghost-btn" type="submit">退款</button>
+          </form>
+          {% elif order.status == 'refunding' %}
+          <form action="{{ url_for('admin_order_action', order_no=order.order_no, action='refund') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit">同意退款</button>
+          </form>
+          {% else %}
+          <span class="hint">无操作</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="empty">当前筛选条件下没有订单。</p>
+  {% endif %}
+</section>
+
+<section class="admin-section">
+  <h2>商品库存</h2>
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead><tr><th>商品</th><th>品牌</th><th>售价</th><th>库存</th><th>调整</th></tr></thead>
+      <tbody>
+      {% for product in products %}
+      <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.brand }}</td>
+        <td>¥{{ product.price }}</td>
+        <td>{% if product.stock <= 3 %}<span class="stock-warning">{{ product.stock }}</span>{% else %}{{ product.stock }}{% endif %}</td>
+        <td>
+          <form class="inline-form" action="{{ url_for('admin_product_stock', pid=product.id) }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input class="qty-input" name="stock" type="number" value="{{ product.stock }}" min="0">
+            <button type="submit">保存</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="admin-section two-col">
+  <div>
+    <h2>优惠券</h2>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>编码</th><th>优惠</th><th>门槛</th><th>已用</th><th>状态</th></tr></thead>
+        <tbody>
+        {% for coupon in coupons %}
+        <tr>
+          <td><code>{{ coupon.code }}</code></td>
+          <td>{% if coupon.kind == 'fixed' %}减 ¥{{ coupon.value_label }}{% else %}{{ coupon.value }}% 折扣{% endif %}</td>
+          <td>满 ¥{{ coupon.min_spend }}</td>
+          <td>{{ coupon.used_count }}{% if coupon.max_uses %} / {{ coupon.max_uses }}{% endif %}</td>
+          <td>{% if coupon.active %}启用{% else %}停用{% endif %}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <form class="panel compact" action="{{ url_for('admin_coupon_create') }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <h3>新建优惠券</h3>
+      <label for="coupon-code-admin">编码</label>
+      <input id="coupon-code-admin" name="code" type="text" placeholder="例如 NEW2026">
+      <label for="coupon-kind">类型</label>
+      <select id="coupon-kind" name="kind">
+        <option value="fixed">固定金额</option>
+        <option value="percent">百分比</option>
+      </select>
+      <label for="coupon-value">优惠值</label>
+      <input id="coupon-value" name="value" type="text" placeholder="固定金额填元，百分比填 1-99">
+      <label for="coupon-min">最低消费</label>
+      <input id="coupon-min" name="min_spend" type="text" value="0">
+      <label for="coupon-max">最高优惠（可选）</label>
+      <input id="coupon-max" name="max_discount" type="text" placeholder="仅百分比券使用">
+      <label for="coupon-uses">最多使用次数（可选）</label>
+      <input id="coupon-uses" name="max_uses" type="number" min="1" placeholder="100">
+      <button type="submit">创建优惠券</button>
+    </form>
+  </div>
+  <div>
+    <h2>账号管理</h2>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>账号</th><th>角色</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+        {% for account in users %}
+        <tr>
+          <td>{{ account.name }}<br><small>{{ account.email }}</small></td>
+          <td>{{ "管理员" if account.role == 'admin' else ("VIP" if account.level == 'vip' else "普通用户") }}</td>
+          <td>{% if account.active %}启用{% else %}停用{% endif %}</td>
+          <td>
+            {% if account.email != 'admin@example.com' %}
+            <form action="{{ url_for('admin_user_toggle', user_id=account.id) }}" method="post">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="ghost-btn" type="submit">{% if account.active %}停用{% else %}启用{% endif %}</button>
+            </form>
+            {% else %}<span class="hint">不可操作</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

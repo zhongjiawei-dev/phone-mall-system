@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% block title %}确认订单 · 手机商城{% endblock %}
+{% block title %}确认订单 · 青禾手机商城{% endblock %}
 {% block content %}
 <h1>确认订单</h1>
 <div class="two-col">
   <div>
     <h2>收货信息</h2>
     <form class="panel" action="{{ url_for('checkout') }}" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <label for="receiver">收货人</label>
       <input id="receiver" name="receiver" type="text" value="{{ user.name }}">
       <label for="phone">手机号</label>
@@ -13,6 +14,7 @@
       <label for="address">详细地址</label>
       <input id="address" name="address" type="text" placeholder="比如：3 栋 201">
       <button id="submit-order" type="submit">提交订单</button>
+      <p class="form-note">提交后系统会立即锁定库存，取消订单或退款后释放。</p>
     </form>
   </div>
   <div>
@@ -24,7 +26,26 @@
     </ul>
     <p>商品金额 <span id="subtotal">¥{{ subtotal }}</span></p>
     {% if discount != "0.00" %}<p class="discount" id="discount-row">会员优惠 -¥{{ discount }}</p>{% endif %}
+    {% if coupon_discount != "0.00" %}<p class="discount" id="coupon-row">优惠券 -¥{{ coupon_discount }}</p>{% endif %}
     <p class="total">应付 <span id="payable-total">¥{{ total }}</span></p>
+
+    <div class="coupon-box">
+      <h3>优惠券</h3>
+      {% if coupon %}
+        <p class="coupon-active">已使用：<strong>{{ coupon.code }}</strong></p>
+        <form action="{{ url_for('clear_coupon') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="ghost-btn" id="clear-coupon" type="submit">取消使用</button>
+        </form>
+      {% else %}
+        <form action="{{ url_for('apply_coupon') }}" method="post" class="coupon-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input id="coupon-code" name="code" type="text" placeholder="输入优惠码，如 WELCOME10">
+          <button id="apply-coupon" type="submit">使用</button>
+        </form>
+        <p class="hint">可用：WELCOME10 立减 10 元；SAVE5 满 3000 减 5%；VIP20 满 3000 减 20 元。</p>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endblock %}

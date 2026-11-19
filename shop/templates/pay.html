@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}支付 · 手机商城{% endblock %}
+{% block title %}支付 · 青禾手机商城{% endblock %}
 {% block content %}
 <h1>支付</h1>
 <div class="panel">
@@ -8,13 +8,18 @@
   {% if order.status == "paid" %}
     <p class="paid" id="pay-status">该订单已支付</p>
     <a class="button" href="{{ url_for('order_detail', order_no=order.order_no) }}">查看订单</a>
+  {% elif order.status != "pending" %}
+    <p class="paid" id="pay-status">订单状态：{{ order.status_label }}</p>
+    <a class="button" href="{{ url_for('order_detail', order_no=order.order_no) }}">查看订单</a>
   {% else %}
   <form action="{{ url_for('pay', order_no=order.order_no) }}" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label class="method"><input id="method-alipay" type="radio" name="method" value="alipay"> 支付宝</label>
     <label class="method"><input id="method-wechat" type="radio" name="method" value="wechat"> 微信支付</label>
     <label class="method"><input id="method-card" type="radio" name="method" value="card"> 银行卡</label>
     <button id="pay-confirm" type="submit">确认支付</button>
   </form>
+  <p class="hint">这是模拟支付，不会产生真实扣款。</p>
   {% endif %}
 </div>
 {% endblock %}
