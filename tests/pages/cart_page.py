@@ -37,10 +37,15 @@ class CartPage(BasePage):
     def set_qty(self, pid, qty):
         self.type((By.ID, f"qty-{pid}"), str(qty))
         self.click((By.CSS_SELECTOR, f".cart-row[data-pid='{pid}'] .update-btn"))
+        # 表单提交后强制重新加载购物车，避免在导航过程中复用旧 DOM 节点。
+        self.open("/cart")
+        self.wait_loaded()
         return self
 
     def remove(self, pid):
         self.click((By.CSS_SELECTOR, f".cart-row[data-pid='{pid}'] .remove-btn"))
+        self.open("/cart")
+        self.wait_loaded()
         return self
 
     def go_checkout(self):
