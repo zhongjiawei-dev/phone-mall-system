@@ -46,4 +46,5 @@ class CartPage(BasePage):
     def go_checkout(self):
         self.click(self.CHECKOUT)
         self.wait_url_contains("/checkout")
+        self.wait.until(lambda d: d.find_elements(By.ID, "receiver"))
         return self

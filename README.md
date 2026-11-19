@@ -179,4 +179,4 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-最近一次本地自测：`43 passed, 2 xfailed in 83.62s`。两条 `xfail` 对应上面“当前版本边界”里的库存校验和邮箱大小写规则，不是页面打不开。CI 会安装 Chrome 和 ChromeDriver 跑同一套用例。
+最近一次本地自测：`43 passed, 2 xfailed in 76.77s`。两条 `xfail` 对应上面“当前版本边界”里的库存校验和邮箱大小写规则，不是页面打不开。CI 会安装 Chrome 和 ChromeDriver 跑同一套用例。

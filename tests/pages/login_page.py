@@ -18,6 +18,7 @@ class LoginPage(BasePage):
         self.type(self.EMAIL, email)
         self.type(self.PASSWORD, password)
         self.click(self.LOGIN_BTN)
+        self.wait.until(lambda d: "/login" not in d.current_url or d.find_elements(*self.FLASH))
         return self
 
     def flash_text(self):

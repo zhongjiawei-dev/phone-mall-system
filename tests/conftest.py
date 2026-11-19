@@ -136,8 +136,8 @@ def cart_with_iphone(logged_in, shop):
 
 @pytest.fixture
 def checkout_ready(cart_with_iphone, shop):
-    from tests.pages.cart_page import CartPage
-    CartPage(cart_with_iphone, shop).open_page().go_checkout()
+    from tests.pages.checkout_page import CheckoutPage
+    CheckoutPage(cart_with_iphone, shop).open_page()
     return cart_with_iphone
 
 

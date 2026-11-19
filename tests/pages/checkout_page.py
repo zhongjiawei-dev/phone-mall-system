@@ -12,7 +12,13 @@ class CheckoutPage(BasePage):
     FLASH = (By.ID, "flash")
 
     def open_page(self):
-        return self.open("/checkout")
+        self.open("/checkout")
+        self.wait_loaded()
+        return self
+
+    def wait_loaded(self):
+        self.wait.until(lambda d: d.find_elements(*self.RECEIVER))
+        return self
 
     def fill(self, receiver="钟同学", phone="13800000001", address="3 栋 201"):
         self.type(self.RECEIVER, receiver)
